@@ -1,24 +1,7 @@
 <template>
     <div class="table-component">
-        <div v-if="showFilter && filterableColumnExists" class="table-component__filter">
-            <input
-                    :class="fullFilterInputClass"
-                    type="text"
-                    v-model="filter"
-                    :placeholder="filterPlaceholder"
-            >
-            <a
-                    v-if="filter"
-                    @click="filter = ''"
-                    class="table-component__filter__clear"
-            >×</a>
-        </div>
-
         <div class="table-component__table-wrapper">
             <table :class="fullTableClass">
-                <caption v-if="showCaption" class="table-component__table__caption" role="alert" aria-live="polite">
-                    {{ ariaCaption }}
-                </caption>
                 <thead :class="fullTableHeadClass">
                 <tr>
                     <table-column-header
@@ -317,7 +300,7 @@
 			emitRowClick(row) {
 				this.$emit('rowClick', row);
 				this.$emit('row-click', row);
-			}
+			},
         },
     };
 </script>
