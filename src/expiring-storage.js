@@ -1,4 +1,4 @@
-const expiringStorage {
+const expiringStorage = {
   get(key) {
     const cached = JSON.parse(localStorage.getItem(key));
 
