@@ -47,19 +47,19 @@
             },
 
             hasFirst() {
-                return this.pagination.currentPage >= 4 || this.pagination.totalPages < 10
+                return this.pagination.currentPage >= 4 || this.pagination.totalPages < 10;
             },
 
             hasLast() {
-                return this.pagination.currentPage <= this.pagination.totalPages - 3 || this.pagination.totalPages < 10
+                return this.pagination.currentPage <= this.pagination.totalPages - 3 || this.pagination.totalPages < 10;
             },
 
             hasFirstEllipsis() {
-                return this.pagination.currentPage >= 4 && this.pagination.totalPages >= 10
+                return this.pagination.currentPage >= 4 && this.pagination.totalPages >= 10;
             },
 
             hasLastEllipsis() {
-                return this.pagination.currentPage <= this.pagination.totalPages - 3 && this.pagination.totalPages >= 10
+                return this.pagination.currentPage <= this.pagination.totalPages - 3 && this.pagination.totalPages >= 10;
             },
 
             shouldShowPagination() {

@@ -10,7 +10,7 @@ const settings = {
 };
 
 export function mergeSettings(newSettings) {
-    for(const setting in newSettings) {
+    for (const setting in newSettings) {
         settings[setting] = newSettings[setting];
     }
 }

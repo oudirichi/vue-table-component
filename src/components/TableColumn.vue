@@ -15,10 +15,10 @@
             label: { default: null, type: String },
             dataType: { default: 'string', type: String },
 
-            sortable: { default: true, type: Boolean },
+            sortable: { default: false, type: Boolean },
             sortBy: { default: null },
 
-            filterable: { default: true, type: Boolean },
+            filterable: { default: false, type: Boolean },
             filterOn: { default: null },
 
             formatter: { default: v => v, type: Function },
