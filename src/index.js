@@ -4,17 +4,17 @@ import Pagination from './components/Pagination';
 import { mergeSettings } from './settings';
 
 export default {
-    install(Vue, options = {}) {
-        mergeSettings(options);
+  install(Vue, options = {}) {
+    mergeSettings(options);
 
-        Vue.component('table-component', TableComponent);
-        Vue.component('table-column', TableColumn);
-        Vue.component('pagination', Pagination);
-    },
+    Vue.component('table-component', TableComponent);
+    Vue.component('table-column', TableColumn);
+    Vue.component('pagination', Pagination);
+  },
 
-    settings(settings) {
-        mergeSettings(settings);
-    },
+  settings(settings) {
+    mergeSettings(settings);
+  },
 };
 
 export { TableComponent, TableColumn };

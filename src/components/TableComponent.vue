@@ -32,7 +32,6 @@
             {{ filterNoResults }}
         </div>
 
-
         <div style="display:none;">
             <slot></slot>
         </div>
@@ -42,265 +41,258 @@
 </template>
 
 <script>
-    import Column from '../classes/Column';
-    import expiringStorage from '../expiring-storage';
-    import Row from '../classes/Row';
-    import TableColumnHeader from './TableColumnHeader';
-    import TableRow from './TableRow';
-    import settings from '../settings';
-    import Pagination from './Pagination';
-    import { classList, pick } from '../helpers';
+import Column from '../classes/Column';
+import expiringStorage from '../expiring-storage';
+import Row from '../classes/Row';
+import TableColumnHeader from './TableColumnHeader';
+import TableRow from './TableRow';
+import settings from '../settings';
+import Pagination from './Pagination';
+import { classList, pick } from '../helpers';
 
-    export default {
-        components: {
-            TableColumnHeader,
-            TableRow,
-            Pagination,
-        },
+export default {
+  components: {
+    TableColumnHeader,
+    TableRow,
+    Pagination,
+  },
 
-        props: {
-            data: { default: () => [], type: [Array, Function] },
+  props: {
+    data: { default: () => [], type: [Array, Function] },
 
-            showFilter: { default: true },
-            showCaption: { default: true },
+    showFilter: { default: true },
+    showCaption: { default: true },
 
-            sortBy: { default: '', type: String },
-            sortOrder: { default: '', type: String },
+    sortBy: { default: '', type: String },
+    sortOrder: { default: '', type: String },
 
-            cacheKey: { default: null },
-            cacheLifetime: { default: 5 },
+    cacheKey: { default: null },
+    cacheLifetime: { default: 5 },
 
-            tableClass: { default: () => settings.tableClass },
-            theadClass: { default: () => settings.theadClass },
-            tbodyClass: { default: () => settings.tbodyClass },
-            filterInputClass: { default: () => settings.filterInputClass },
-            filterPlaceholder: { default: () => settings.filterPlaceholder },
-            filterNoResults: { default: () => settings.filterNoResults },
-        },
+    tableClass: { default: () => settings.tableClass },
+    theadClass: { default: () => settings.theadClass },
+    tbodyClass: { default: () => settings.tbodyClass },
+    filterInputClass: { default: () => settings.filterInputClass },
+    filterPlaceholder: { default: () => settings.filterPlaceholder },
+    filterNoResults: { default: () => settings.filterNoResults },
+  },
 
-        data: () => ({
-            columns: [],
-            rows: [],
-            filter: '',
-            sort: {
-                fieldName: '',
-                order: '',
-            },
-            pagination: null,
+  data: () => ({
+    columns: [],
+    rows: [],
+    filter: '',
+    sort: {
+      fieldName: '',
+      order: '',
+    },
+    pagination: null,
 
-            localSettings: {},
-        }),
+    localSettings: {},
+  }),
 
-        created() {
-            this.sort.fieldName = this.sortBy;
-            this.sort.order = this.sortOrder;
+  created() {
+    this.sort.fieldName = this.sortBy;
+    this.sort.order = this.sortOrder;
 
-            this.restoreState();
-        },
+    this.restoreState();
+  },
 
-        async mounted() {
-            const columnComponents = this.$slots.default
-                .filter(column => column.componentInstance)
-                .map(column => column.componentInstance);
+  async mounted() {
+    const columnComponents = this.$slots.default
+      .filter((column) => column.componentInstance)
+      .map((column) => column.componentInstance);
 
-            this.columns = columnComponents.map(
-                column => new Column(column)
-            );
+    this.columns = columnComponents.map((column) => new Column(column));
 
-            columnComponents.forEach(columnCom => {
-                Object.keys(columnCom.$options.props).forEach(
-                    prop => columnCom.$watch(prop, () => {
-                        this.columns = columnComponents.map(
-                            column => new Column(column)
-                        );
-                    })
-                );
-            });
+    columnComponents.forEach((columnCom) => {
+      Object.keys(columnCom.$options.props).forEach((prop) => columnCom.$watch(prop, () => {
+        this.columns = columnComponents.map((column) => new Column(column));
+      }));
+    });
 
-            await this.mapDataToRows();
-        },
+    await this.mapDataToRows();
+  },
 
-        watch: {
-            filter() {
-                if (!this.usesLocalData) {
-                    this.mapDataToRows();
-                }
+  watch: {
+    filter() {
+      if (!this.usesLocalData) {
+        this.mapDataToRows();
+      }
 
-                this.saveState();
-            },
+      this.saveState();
+    },
 
-            data() {
-                if (this.usesLocalData) {
-                    this.mapDataToRows();
-                }
-            },
-        },
+    data() {
+      if (this.usesLocalData) {
+        this.mapDataToRows();
+      }
+    },
+  },
 
-        computed: {
-            fullTableClass() {
-                return classList('table-component__table', this.tableClass);
-            },
+  computed: {
+    fullTableClass() {
+      return classList('table-component__table', this.tableClass);
+    },
 
-            fullTableHeadClass() {
-                return classList('table-component__table__head', this.theadClass);
-            },
+    fullTableHeadClass() {
+      return classList('table-component__table__head', this.theadClass);
+    },
 
-            fullTableBodyClass() {
-                return classList('table-component__table__body', this.tbodyClass);
-            },
+    fullTableBodyClass() {
+      return classList('table-component__table__body', this.tbodyClass);
+    },
 
-            fullFilterInputClass() {
-                return classList('table-component__filter__field', this.filterInputClass);
-            },
+    fullFilterInputClass() {
+      return classList('table-component__filter__field', this.filterInputClass);
+    },
 
-            ariaCaption() {
-                if (this.sort.fieldName === '') {
-                    return 'Table not sorted';
-                }
+    ariaCaption() {
+      if (this.sort.fieldName === '') {
+        return 'Table not sorted';
+      }
 
-                return `Table sorted by ${this.sort.fieldName} ` +
-                    (this.sort.order === 'asc' ? '(ascending)' : '(descending)');
-            },
+      return `Table sorted by ${this.sort.fieldName} ${
+        this.sort.order === 'asc' ? '(ascending)' : '(descending)'}`;
+    },
 
-            usesLocalData() {
-                return Array.isArray(this.data);
-            },
+    usesLocalData() {
+      return Array.isArray(this.data);
+    },
 
-            displayedRows() {
-                if (!this.usesLocalData) {
-                    return this.sortedRows;
-                }
+    displayedRows() {
+      if (!this.usesLocalData) {
+        return this.sortedRows;
+      }
 
-                if (!this.showFilter) {
-                    return this.sortedRows;
-                }
+      if (!this.showFilter) {
+        return this.sortedRows;
+      }
 
-                if (!this.columns.filter(column => column.isFilterable()).length) {
-                    return this.sortedRows;
-                }
+      if (!this.columns.filter((column) => column.isFilterable()).length) {
+        return this.sortedRows;
+      }
 
-                return this.sortedRows.filter(row => row.passesFilter(this.filter));
-            },
+      return this.sortedRows.filter((row) => row.passesFilter(this.filter));
+    },
 
-            sortedRows() {
-                if (!this.usesLocalData) {
-                    return this.rows;
-                }
+    sortedRows() {
+      if (!this.usesLocalData) {
+        return this.rows;
+      }
 
-                if (this.sort.fieldName === '') {
-                    return this.rows;
-                }
+      if (this.sort.fieldName === '') {
+        return this.rows;
+      }
 
-                if (this.columns.length === 0) {
-                    return this.rows;
-                }
+      if (this.columns.length === 0) {
+        return this.rows;
+      }
 
-                const sortColumn = this.getColumn(this.sort.fieldName);
+      const sortColumn = this.getColumn(this.sort.fieldName);
 
-                if (!sortColumn) {
-                    return this.rows;
-                }
+      if (!sortColumn) {
+        return this.rows;
+      }
 
-                return this.rows.sort(sortColumn.getSortPredicate(this.sort.order, this.columns));
-            },
+      return this.rows.sort(sortColumn.getSortPredicate(this.sort.order, this.columns));
+    },
 
-            filterableColumnExists() {
-                return this.columns.filter(c => c.isFilterable()).length > 0;
-            },
+    filterableColumnExists() {
+      return this.columns.filter((c) => c.isFilterable()).length > 0;
+    },
 
-            storageKey() {
-                return this.cacheKey
-                    ? `vue-table-component.${this.cacheKey}`
-                    : `vue-table-component.${window.location.host}${window.location.pathname}${this.cacheKey}`;
-            },
-        },
+    storageKey() {
+      const storageWithCacheKey = `vue-table-component.${this.cacheKey}`;
+      const storageWithoutCacheKey = `vue-table-component.${window.location.host}${window.location.pathname}${this.cacheKey}`;
 
-        methods: {
-            async pageChange(page) {
-                this.pagination.currentPage = page;
+      return this.cacheKey ? storageWithCacheKey : storageWithoutCacheKey;
+    },
+  },
 
-                await this.mapDataToRows();
-            },
+  methods: {
+    async pageChange(page) {
+      this.pagination.currentPage = page;
 
-            async mapDataToRows() {
-                const data = this.usesLocalData
-                    ? this.prepareLocalData()
-                    : await this.fetchServerData();
+      await this.mapDataToRows();
+    },
 
-                let rowId = 0;
+    async mapDataToRows() {
+      const data = this.usesLocalData ? this.prepareLocalData() : await this.fetchServerData();
 
-                this.rows = data
-                    .map(rowData => {
-                        rowData.vueTableComponentInternalRowId = rowId++;
-                        return rowData;
-                    })
-                    .map(rowData => new Row(rowData, this.columns));
-            },
+      let rowId = 0;
 
-            prepareLocalData() {
-                this.pagination = null;
+      this.rows = data
+        .map((rowData) => {
+          rowData.vueTableComponentInternalRowId = rowId++;
+          return rowData;
+        })
+        .map((rowData) => new Row(rowData, this.columns));
+    },
 
-                return this.data;
-            },
+    prepareLocalData() {
+      this.pagination = null;
 
-            async fetchServerData() {
-                const page = this.pagination && this.pagination.currentPage || 1;
+      return this.data;
+    },
 
-                const response = await this.data({
-                    filter: this.filter,
-                    sort: this.sort,
-                    page: page,
-                });
+    async fetchServerData() {
+      const page = (this.pagination && this.pagination.currentPage) || 1;
 
-                this.pagination = response.pagination;
+      const response = await this.data({
+        filter: this.filter,
+        sort: this.sort,
+        page: page,
+      });
 
-                return response.data;
-            },
+      this.pagination = response.pagination;
 
-            async refresh() {
-                await this.mapDataToRows();
-            },
+      return response.data;
+    },
 
-            changeSorting(column) {
-                if (this.sort.fieldName !== column.show) {
-                    this.sort.fieldName = column.show;
-                    this.sort.order = 'asc';
-                } else {
-                    this.sort.order = (this.sort.order === 'asc' ? 'desc' : 'asc');
-                }
+    async refresh() {
+      await this.mapDataToRows();
+    },
 
-                if (!this.usesLocalData) {
-                    this.mapDataToRows();
-                }
+    changeSorting(column) {
+      if (this.sort.fieldName === column.show) {
+        this.sort.order = this.sort.order === 'asc' ? 'desc' : 'asc';
+      } else {
+        this.sort.fieldName = column.show;
+        this.sort.order = 'asc';
+      }
 
-                this.saveState();
-            },
+      if (!this.usesLocalData) {
+        this.mapDataToRows();
+      }
 
-            getColumn(columnName) {
-                return this.columns.find(column => column.show === columnName);
-            },
+      this.saveState();
+    },
 
-            saveState() {
-                expiringStorage.set(this.storageKey, pick(this.$data, ['filter', 'sort']), this.cacheLifetime);
-            },
+    getColumn(columnName) {
+      return this.columns.find((column) => column.show === columnName);
+    },
 
-            restoreState() {
-                const previousState = expiringStorage.get(this.storageKey);
+    saveState() {
+      expiringStorage.set(this.storageKey, pick(this.$data, ['filter', 'sort']), this.cacheLifetime);
+    },
 
-                if (previousState === null) {
-                    return;
-                }
+    restoreState() {
+      const previousState = expiringStorage.get(this.storageKey);
 
-                this.sort = previousState.sort;
-                this.filter = previousState.filter;
+      if (previousState === null) {
+        return;
+      }
 
-                this.saveState();
-            },
+      this.sort = previousState.sort;
+      this.filter = previousState.filter;
 
-			emitRowClick(row) {
-				this.$emit('rowClick', row);
-				this.$emit('row-click', row);
-			},
-        },
-    };
+      this.saveState();
+    },
+
+    emitRowClick(row) {
+      this.$emit('rowClick', row);
+      this.$emit('row-click', row);
+    },
+  },
+};
 </script>
