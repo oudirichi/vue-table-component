@@ -20,6 +20,10 @@
     "url": "https://github.com/cognibox/vue-table-component/issues"
   },
   "homepage": "https://github.com/cognibox/vue-table-component",
+  "dependencies": {
+    "babel-eslint": "^7.2.3",
+    "eslint-plugin-vue": "^3.0.0"
+  },
   "peerDependencies": {
     "vue": "^2.5.0"
   },

@@ -14,11 +14,11 @@ const expiringStorage = {
     }
 
     return cached.value;
-  }
+  },
 
   has(key) {
     return this.get(key) !== null;
-  }
+  },
 
   set(key, value, lifeTimeInMinutes) {
     const currentTime = new Date().getTime();
@@ -29,7 +29,7 @@ const expiringStorage = {
     const expires = new Date(currentTime + (lifeTimeInMinutes * secondsInMinute * milisecondsInSecond));
 
     localStorage.setItem(key, JSON.stringify({ value, expires }));
-  }
-}
+  },
+};
 
 export default expiringStorage;
