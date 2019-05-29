@@ -24,7 +24,6 @@
   },
   "homepage": "https://github.com/spatie/vue-table-component",
   "peerDependencies": {
-    "moment": "^2.18.1",
     "vue": "^2.5.0"
   },
   "devDependencies": {
@@ -41,7 +40,6 @@
     "jest": "^19.0.0",
     "jest-serializer-html": "^4.0.0",
     "jest-vue-preprocessor": "^0.2.0",
-    "moment": "^2.24.0",
     "simulant": "^0.2.2",
     "vue": "^2.5.0",
     "vue-loader": "^12.0.3",

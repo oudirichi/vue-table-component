@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { get } from '../helpers';
 
 export default class Row {
@@ -36,12 +35,6 @@ export default class Row {
 
     if (value instanceof String) {
       value = value.toLowerCase();
-    }
-
-    if (dataType.startsWith('date')) {
-      const format = dataType.replace('date:', '');
-
-      return moment(value, format).format('YYYYMMDDHHmmss');
     }
 
     if (dataType === 'numeric') {
