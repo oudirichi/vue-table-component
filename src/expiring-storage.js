@@ -1,5 +1,5 @@
-class ExpiringStorage {
-  static get(key) {
+const expiringStorage {
+  get(key) {
     const cached = JSON.parse(localStorage.getItem(key));
 
     if (!cached) {
@@ -16,11 +16,11 @@ class ExpiringStorage {
     return cached.value;
   }
 
-  static has(key) {
+  has(key) {
     return this.get(key) !== null;
   }
 
-  static set(key, value, lifeTimeInMinutes) {
+  set(key, value, lifeTimeInMinutes) {
     const currentTime = new Date().getTime();
 
     const secondsInMinute = 60;
@@ -32,4 +32,4 @@ class ExpiringStorage {
   }
 }
 
-export default ExpiringStorage;
+export default expiringStorage;
