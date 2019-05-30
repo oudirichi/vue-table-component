@@ -1886,29 +1886,15 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         return Array.isArray(this.data);
       },
       displayedRows: function displayedRows() {
-        var _this2 = this;
+        var rows = this.sortedRows;
 
-        if (!this.usesLocalData) {
-          return this.sortedRows;
-        }
+        console.log('pagination :: ', this.pagination);
 
-        if (!this.showFilter) {
-          return this.sortedRows;
-        }
-
-        if (!this.columns.filter(function (column) {
-          return column.isFilterable();
-        }).length) {
-          return this.sortedRows;
-        }
-
-        var rows = this.sortedRows.filter(function (row) {
-          return row.passesFilter(_this2.filter);
-        });
-
-        if (this.pagination) {
+        if (this.usesLocalData && this.pagination) {
           var lastPage = this.pagination.currentPage - 1;
+          console.log('lastPage :: ', lastPage);
           var lastElementOfLastPageIndex = lastPage * this.pagination.perPage;
+          console.log('lastElementOfLastPageIndex :: ', lastElementOfLastPageIndex);
           rows = rows.slice(lastElementOfLastPageIndex, lastElementOfLastPageIndex + this.pagination.perPage);
         }
 
@@ -1976,7 +1962,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }(),
       mapDataToRows: function () {
         var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
-          var _this3 = this;
+          var _this2 = this;
 
           var data, rowId;
           return _regenerator2.default.wrap(function _callee3$(_context3) {
@@ -2008,7 +1994,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     rowData.vueTableComponentInternalRowId = rowId++;
                     return rowData;
                   }).map(function (rowData) {
-                    return new _Row2.default(rowData, _this3.columns);
+                    return new _Row2.default(rowData, _this2.columns);
                   });
 
                 case 10:

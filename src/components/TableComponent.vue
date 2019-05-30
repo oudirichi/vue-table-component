@@ -168,23 +168,15 @@ export default {
     },
 
     displayedRows() {
-      if (!this.usesLocalData) {
-        return this.sortedRows;
-      }
+      let rows = this.sortedRows;
 
-      if (!this.showFilter) {
-        return this.sortedRows;
-      }
+      console.log('pagination :: ', this.pagination);
 
-      if (!this.columns.filter((column) => column.isFilterable()).length) {
-        return this.sortedRows;
-      }
-
-      let rows = this.sortedRows.filter((row) => row.passesFilter(this.filter));
-
-      if (this.pagination) {
+      if (this.usesLocalData && this.pagination) {
         const lastPage = this.pagination.currentPage - 1;
+        console.log('lastPage :: ', lastPage);
         const lastElementOfLastPageIndex = lastPage * this.pagination.perPage;
+        console.log('lastElementOfLastPageIndex :: ', lastElementOfLastPageIndex);
         rows = rows.slice(lastElementOfLastPageIndex, lastElementOfLastPageIndex + this.pagination.perPage);
       }
 
