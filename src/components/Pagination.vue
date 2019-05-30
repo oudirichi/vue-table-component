@@ -7,14 +7,19 @@
           <i class="left chevron icon">«</i>
         </a>
       </li>
+
       <li v-if="hasFirst" class="page-item" :class="{ active: isActive(1) }">
-        <a class="page-link" @click="pageClicked(1)">1</a>
+        <a class="page-link" @click="pageClicked(1)">1?</a>
       </li>
+
       <li v-if="hasFirstEllipsis"><span class="pagination-ellipsis">&hellip;</span></li>
+
       <li class="page-item" :class="{ active: isActive(page), disabled: page === '...' }" v-for="page in pages" :key="page">
         <a class="page-link" @click="pageClicked(page)">{{ page }}</a>
       </li>
+
       <li v-if="hasLastEllipsis"><span class="pagination-ellipsis">&hellip;</span></li>
+
       <li v-if="hasLast" class="page-item"
         :class="{ active: isActive(this.totalPages) }">
         <a class="page-link" @click="pageClicked(totalPages)">{{totalPages}}</a>
