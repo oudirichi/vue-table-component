@@ -180,7 +180,15 @@ export default {
         return this.sortedRows;
       }
 
-      return this.sortedRows.filter((row) => row.passesFilter(this.filter));
+      let rows = this.sortedRows.filter((row) => row.passesFilter(this.filter));
+
+      if (this.pagination) {
+        const lastPage = this.pagination.currentPage - 1;
+        const lastElementOfLastPageIndex = lastPage * this.pagination.perPage;
+        rows = rows.slice(lastElementOfLastPageIndex, lastElementOfLastPageIndex + this.pagination.perPage);
+      }
+
+      return rows;
     },
 
     sortedRows() {

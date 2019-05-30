@@ -1902,9 +1902,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return this.sortedRows;
         }
 
-        return this.sortedRows.filter(function (row) {
+        var rows = this.sortedRows.filter(function (row) {
           return row.passesFilter(_this2.filter);
         });
+
+        if (this.pagination) {
+          var lastPage = this.pagination.currentPage - 1;
+          var lastElementOfLastPageIndex = lastPage * this.pagination.perPage;
+          rows = rows.slice(lastElementOfLastPageIndex, lastElementOfLastPageIndex + this.pagination.perPage);
+        }
+
+        return rows;
       },
       sortedRows: function sortedRows() {
         if (!this.usesLocalData) {
