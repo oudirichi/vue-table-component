@@ -2175,7 +2175,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     function Column(columnComponent) {
       (0, _classCallCheck3.default)(this, Column);
 
-      var properties = (0, _helpers.pick)(columnComponent, ['show', 'label', 'dataType', 'sortable', 'sortBy', 'formatter', 'cellClass', 'headerClass']);
+      var properties = (0, _helpers.pick)(columnComponent, ['show', 'label', 'dataType', 'sortable', 'sortBy', 'hidden', 'formatter', 'cellClass', 'headerClass']);
 
       for (var property in properties) {
         if (Object.prototype.hasOwnProperty.call(properties, property)) {
