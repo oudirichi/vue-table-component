@@ -77,7 +77,7 @@ export default {
         return false;
       }
 
-      if (this.pagination.count === 0) {
+      if (this.count === 0) {
         return false;
       }
 

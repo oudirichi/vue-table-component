@@ -1511,7 +1511,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return false;
         }
 
-        if (this.pagination.count === 0) {
+        if (this.count === 0) {
           return false;
         }
 
