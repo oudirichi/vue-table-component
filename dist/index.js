@@ -5105,7 +5105,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('th', {
+  return (this.isVisible) ? _c('th', {
     class: _vm.headerClass,
     attrs: {
       "role": "columnheader",
@@ -5115,7 +5115,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.clicked
     }
-  }, [_vm._v("\n    " + _vm._s(_vm.label) + "\n")])
+  }, [_vm._v("\n    " + _vm._s(_vm.label) + "\n")]) : _vm._e()
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
