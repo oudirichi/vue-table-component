@@ -1,9 +1,9 @@
 <template>
   <nav v-if="shouldShowPagination">
     <ul class="pagination justify-content-center">
-      <li :class="{ disabled: pagination.currentPage === 1 }">
-        <a :class="{ disabled: pagination.currentPage === 1 }"
-           @click="pageClicked( pagination.currentPage - 1 )">
+      <li :class="{ disabled: currentPage === 1 }">
+        <a :class="{ disabled: currentPage === 1 }"
+           @click="pageClicked( currentPage - 1 )">
           <i class="left chevron icon">«</i>
         </a>
       </li>
@@ -16,12 +16,12 @@
       </li>
       <li v-if="hasLastEllipsis"><span class="pagination-ellipsis">&hellip;</span></li>
       <li v-if="hasLast" class="page-item"
-        :class="{ active: isActive(this.pagination.totalPages) }">
-        <a class="page-link" @click="pageClicked(pagination.totalPages)">{{pagination.totalPages}}</a>
+        :class="{ active: isActive(this.totalPages) }">
+        <a class="page-link" @click="pageClicked(totalPages)">{{totalPages}}</a>
       </li>
       <li>
-        <a :class="{ disabled: pagination.currentPage === pagination.totalPages }"
-           @click="pageClicked( pagination.currentPage + 1 )">
+        <a :class="{ disabled: currentPage === totalPages }"
+           @click="pageClicked( currentPage + 1 )">
           <i class="right chevron icon">»</i>
         </a>
       </li>
@@ -33,35 +33,47 @@
 
 export default {
   props: {
-    pagination: {
-      type: Object,
-      default: () => ({}),
+    currentPage: {
+      type: Number,
+      default: 1,
+    },
+    PerPage: {
+      type: Number,
+      default: 10,
+    },
+    count: {
+      type: Number,
+      default: undefined,
     },
   },
 
   computed: {
+    totalPages() {
+      return this.count ? 0 : Math.ceil(this.count / this.perPage);
+    },
+
     pages() {
-      return this.pagination.totalPages === undefined ? [] : this.pageLinks();
+      return this.totalPages === 0 ? [] : this.pageLinks();
     },
 
     hasFirst() {
-      return this.pagination.currentPage >= 4 || this.pagination.totalPages < 10;
+      return this.currentPage >= 4 || this.totalPages < 10;
     },
 
     hasLast() {
-      return this.pagination.currentPage <= this.pagination.totalPages - 3 || this.pagination.totalPages < 10;
+      return this.currentPage <= this.totalPages - 3 || this.totalPages < 10;
     },
 
     hasFirstEllipsis() {
-      return this.pagination.currentPage >= 4 && this.pagination.totalPages >= 10;
+      return this.currentPage >= 4 && this.totalPages >= 10;
     },
 
     hasLastEllipsis() {
-      return this.pagination.currentPage <= this.pagination.totalPages - 3 && this.pagination.totalPages >= 10;
+      return this.currentPage <= this.totalPages - 3 && this.totalPages >= 10;
     },
 
     shouldShowPagination() {
-      if (this.pagination.totalPages === undefined) {
+      if (this.totalPages === undefined) {
         return false;
       }
 
@@ -69,22 +81,22 @@ export default {
         return false;
       }
 
-      return this.pagination.totalPages > 1;
+      return this.totalPages > 1;
     },
 
   },
 
   methods: {
     isActive(page) {
-      const currentPage = this.pagination.currentPage || 1;
+      const currentPage = this.currentPage || 1;
 
       return currentPage === page;
     },
 
     pageClicked(page) {
       if (page === '...' ||
-        page === this.pagination.currentPage ||
-        page > this.pagination.totalPages ||
+        page === this.currentPage ||
+        page > this.totalPages ||
         page < 1) {
         return;
       }
@@ -96,11 +108,11 @@ export default {
       const pages = [];
 
       let left = 2;
-      let right = this.pagination.totalPages - 1;
+      let right = this.totalPages - 1;
 
-      if (this.pagination.totalPages >= 10) {
-        left = Math.max(1, this.pagination.currentPage - 2);
-        right = Math.min(this.pagination.currentPage + 2, this.pagination.totalPages);
+      if (this.totalPages >= 10) {
+        left = Math.max(1, this.currentPage - 2);
+        right = Math.min(this.currentPage + 2, this.totalPages);
       }
 
       for (let i = left; i <= right; i++) {

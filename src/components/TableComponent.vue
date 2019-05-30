@@ -36,7 +36,14 @@
             <slot></slot>
         </div>
 
-        <pagination v-if="pagination" :pagination="pagination" @pageChange="pageChange"></pagination>
+        <template v-if="pagination">
+          <pagination
+            :current-page="pagination.currentPage"
+            :per-page="pagination.perPage"
+            :count="count"
+            @pageChange="pageChange"
+          ></pagination>
+        </template>
     </div>
 </template>
 
@@ -59,6 +66,7 @@ export default {
 
   props: {
     data: { default: () => [], type: [Array, Function] },
+    pagination: { type: Object, default: undefined },
 
     showFilter: { default: true },
     showCaption: { default: true },
@@ -85,7 +93,7 @@ export default {
       fieldName: '',
       order: '',
     },
-    pagination: null,
+    count: undefined,
 
     localSettings: {},
   }),
@@ -230,7 +238,7 @@ export default {
     },
 
     prepareLocalData() {
-      this.pagination = null;
+      this.count = this.data.length;
 
       return this.data;
     },
@@ -244,7 +252,7 @@ export default {
         page: page,
       });
 
-      this.pagination = response.pagination;
+      this.count = response.count;
 
       return response.data;
     },
