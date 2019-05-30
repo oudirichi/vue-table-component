@@ -68,7 +68,6 @@ export default {
     data: { default: () => [], type: [Array, Function] },
     pagination: { type: Object, default: undefined },
 
-    showFilter: { default: true },
     showCaption: { default: true },
 
     sortBy: { default: '', type: String },
@@ -80,15 +79,12 @@ export default {
     tableClass: { default: () => settings.tableClass },
     theadClass: { default: () => settings.theadClass },
     tbodyClass: { default: () => settings.tbodyClass },
-    filterInputClass: { default: () => settings.filterInputClass },
-    filterPlaceholder: { default: () => settings.filterPlaceholder },
     filterNoResults: { default: () => settings.filterNoResults },
   },
 
   data: () => ({
     columns: [],
     rows: [],
-    filter: '',
     sort: {
       fieldName: '',
       order: '',
@@ -122,14 +118,6 @@ export default {
   },
 
   watch: {
-    filter() {
-      if (!this.usesLocalData) {
-        this.mapDataToRows();
-      }
-
-      this.saveState();
-    },
-
     data() {
       if (this.usesLocalData) {
         this.mapDataToRows();
@@ -148,10 +136,6 @@ export default {
 
     fullTableBodyClass() {
       return classList('table-component__table__body', this.tbodyClass);
-    },
-
-    fullFilterInputClass() {
-      return classList('table-component__filter__field', this.filterInputClass);
     },
 
     ariaCaption() {
@@ -239,7 +223,6 @@ export default {
       const page = (this.pagination && this.pagination.currentPage) || 1;
 
       const response = await this.data({
-        filter: this.filter,
         sort: this.sort,
         page: page,
       });
@@ -273,7 +256,7 @@ export default {
     },
 
     saveState() {
-      expiringStorage.set(this.storageKey, pick(this.$data, ['filter', 'sort']), this.cacheLifetime);
+      expiringStorage.set(this.storageKey, pick(this.$data, ['sort']), this.cacheLifetime);
     },
 
     restoreState() {
@@ -284,7 +267,6 @@ export default {
       }
 
       this.sort = previousState.sort;
-      this.filter = previousState.filter;
 
       this.saveState();
     },

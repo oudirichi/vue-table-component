@@ -668,8 +668,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     tbodyClass: '',
     headerClass: '',
     cellClass: '',
-    filterInputClass: '',
-    filterPlaceholder: 'Filter table…',
     filterNoResults: 'There are no matching rows'
   };
 
@@ -1745,7 +1743,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }, type: [Array, Function] },
       pagination: { type: Object, default: undefined },
 
-      showFilter: { default: true },
       showCaption: { default: true },
 
       sortBy: { default: '', type: String },
@@ -1763,12 +1760,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       tbodyClass: { default: function _default() {
           return _settings2.default.tbodyClass;
         } },
-      filterInputClass: { default: function _default() {
-          return _settings2.default.filterInputClass;
-        } },
-      filterPlaceholder: { default: function _default() {
-          return _settings2.default.filterPlaceholder;
-        } },
       filterNoResults: { default: function _default() {
           return _settings2.default.filterNoResults;
         } }
@@ -1778,7 +1769,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       return {
         columns: [],
         rows: [],
-        filter: '',
         sort: {
           fieldName: '',
           order: ''
@@ -1845,13 +1835,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
     watch: {
-      filter: function filter() {
-        if (!this.usesLocalData) {
-          this.mapDataToRows();
-        }
-
-        this.saveState();
-      },
       data: function data() {
         if (this.usesLocalData) {
           this.mapDataToRows();
@@ -1868,9 +1851,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       },
       fullTableBodyClass: function fullTableBodyClass() {
         return (0, _helpers.classList)('table-component__table__body', this.tbodyClass);
-      },
-      fullFilterInputClass: function fullFilterInputClass() {
-        return (0, _helpers.classList)('table-component__filter__field', this.filterInputClass);
       },
       ariaCaption: function ariaCaption() {
         if (this.sort.fieldName === '') {
@@ -2014,7 +1994,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   page = this.pagination && this.pagination.currentPage || 1;
                   _context4.next = 3;
                   return this.data({
-                    filter: this.filter,
                     sort: this.sort,
                     page: page
                   });
@@ -2084,7 +2063,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         });
       },
       saveState: function saveState() {
-        _expiringStorage2.default.set(this.storageKey, (0, _helpers.pick)(this.$data, ['filter', 'sort']), this.cacheLifetime);
+        _expiringStorage2.default.set(this.storageKey, (0, _helpers.pick)(this.$data, ['sort']), this.cacheLifetime);
       },
       restoreState: function restoreState() {
         var previousState = _expiringStorage2.default.get(this.storageKey);
@@ -2094,7 +2073,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }
 
         this.sort = previousState.sort;
-        this.filter = previousState.filter;
 
         this.saveState();
       },
@@ -2197,7 +2175,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     function Column(columnComponent) {
       (0, _classCallCheck3.default)(this, Column);
 
-      var properties = (0, _helpers.pick)(columnComponent, ['show', 'label', 'dataType', 'sortable', 'sortBy', 'hidden', 'formatter', 'cellClass', 'headerClass']);
+      var properties = (0, _helpers.pick)(columnComponent, ['show', 'label', 'dataType', 'sortable', 'sortBy', 'formatter', 'cellClass', 'headerClass']);
 
       for (var property in properties) {
         if (Object.prototype.hasOwnProperty.call(properties, property)) {
@@ -4939,7 +4917,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         return _vm.$emit('rowClick', _vm.row)
       }
     }
-  }, _vm._l((_vm.visibleColumns), function(column) {
+  }, _vm._l((_vm.columns), function(column) {
     return _c('table-cell', {
       key: column.id,
       attrs: {
@@ -5127,7 +5105,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return (this.isVisible) ? _c('th', {
+  return _c('th', {
     class: _vm.headerClass,
     attrs: {
       "role": "columnheader",
@@ -5137,7 +5115,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.clicked
     }
-  }, [_vm._v("\n    " + _vm._s(_vm.label) + "\n")]) : _vm._e()
+  }, [_vm._v("\n    " + _vm._s(_vm.label) + "\n")])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

@@ -1,7 +1,7 @@
 <template>
     <tr @click="$emit('rowClick', row)">
         <table-cell
-            v-for="column in visibleColumns"
+            v-for="column in columns"
             :row="row"
             :column="column"
             :key="column.id"

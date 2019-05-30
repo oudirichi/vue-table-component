@@ -4,7 +4,7 @@ export default class Column {
   constructor(columnComponent) {
     const properties = pick(columnComponent, [
       'show', 'label', 'dataType', 'sortable', 'sortBy',
-      'hidden', 'formatter', 'cellClass', 'headerClass',
+      'formatter', 'cellClass', 'headerClass',
     ]);
 
     for (const property in properties) {
