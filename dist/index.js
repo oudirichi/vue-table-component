@@ -4917,7 +4917,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         return _vm.$emit('rowClick', _vm.row)
       }
     }
-  }, _vm._l((_vm.columns), function(column) {
+  }, _vm._l((_vm.visibleColumns), function(column) {
     return _c('table-cell', {
       key: column.id,
       attrs: {
