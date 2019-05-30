@@ -170,13 +170,9 @@ export default {
     displayedRows() {
       let rows = this.sortedRows;
 
-      console.log('pagination :: ', this.pagination);
-
       if (this.usesLocalData && this.pagination) {
         const lastPage = this.pagination.currentPage - 1;
-        console.log('lastPage :: ', lastPage);
         const lastElementOfLastPageIndex = lastPage * this.pagination.perPage;
-        console.log('lastElementOfLastPageIndex :: ', lastElementOfLastPageIndex);
         rows = rows.slice(lastElementOfLastPageIndex, lastElementOfLastPageIndex + this.pagination.perPage);
       }
 
@@ -203,10 +199,6 @@ export default {
       }
 
       return this.rows.sort(sortColumn.getSortPredicate(this.sort.order, this.columns));
-    },
-
-    filterableColumnExists() {
-      return this.columns.filter((c) => c.isFilterable()).length > 0;
     },
 
     storageKey() {

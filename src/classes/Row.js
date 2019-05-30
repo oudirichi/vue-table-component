@@ -14,16 +14,6 @@ export default class Row {
     return this.columns.find((column) => column.show === columnName);
   }
 
-  getFilterableValue(columnName) {
-    const value = this.getValue(columnName);
-
-    if (!value) {
-      return '';
-    }
-
-    return value.toString().toLowerCase();
-  }
-
   getSortableValue(columnName) {
     const dataType = this.getColumn(columnName).dataType;
 
@@ -42,13 +32,5 @@ export default class Row {
     }
 
     return value.toString();
-  }
-
-  passesFilter(filter) {
-    return this.columns
-      .filter((column) => column.isFilterable())
-      .map((column) => this.getFilterableValue(column.getFilterFieldName()))
-      .filter((filterableValue) => filterableValue.indexOf(filter.toLowerCase()) >= 0)
-      .length;
   }
 }

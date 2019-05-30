@@ -18,9 +18,6 @@ export default {
     sortable: { default: false, type: Boolean },
     sortBy: { default: null },
 
-    filterable: { default: false, type: Boolean },
-    filterOn: { default: null },
-
     formatter: { default: (v) => v, type: Function },
 
     hidden: { default: false, type: Boolean },

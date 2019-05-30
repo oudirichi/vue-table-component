@@ -1588,9 +1588,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       sortable: { default: false, type: Boolean },
       sortBy: { default: null },
 
-      filterable: { default: false, type: Boolean },
-      filterOn: { default: null },
-
       formatter: { default: function _default(v) {
           return v;
         }, type: Function },
@@ -1888,13 +1885,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       displayedRows: function displayedRows() {
         var rows = this.sortedRows;
 
-        console.log('pagination :: ', this.pagination);
-
         if (this.usesLocalData && this.pagination) {
           var lastPage = this.pagination.currentPage - 1;
-          console.log('lastPage :: ', lastPage);
           var lastElementOfLastPageIndex = lastPage * this.pagination.perPage;
-          console.log('lastElementOfLastPageIndex :: ', lastElementOfLastPageIndex);
           rows = rows.slice(lastElementOfLastPageIndex, lastElementOfLastPageIndex + this.pagination.perPage);
         }
 
@@ -1920,11 +1913,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }
 
         return this.rows.sort(sortColumn.getSortPredicate(this.sort.order, this.columns));
-      },
-      filterableColumnExists: function filterableColumnExists() {
-        return this.columns.filter(function (c) {
-          return c.isFilterable();
-        }).length > 0;
       },
       storageKey: function storageKey() {
         var storageWithCacheKey = 'vue-table-component.' + this.cacheKey;
@@ -2209,7 +2197,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     function Column(columnComponent) {
       (0, _classCallCheck3.default)(this, Column);
 
-      var properties = (0, _helpers.pick)(columnComponent, ['show', 'label', 'dataType', 'sortable', 'sortBy', 'filterable', 'filterOn', 'hidden', 'formatter', 'cellClass', 'headerClass']);
+      var properties = (0, _helpers.pick)(columnComponent, ['show', 'label', 'dataType', 'sortable', 'sortBy', 'hidden', 'formatter', 'cellClass', 'headerClass']);
 
       for (var property in properties) {
         if (Object.prototype.hasOwnProperty.call(properties, property)) {
@@ -2221,16 +2209,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     }
 
     (0, _createClass3.default)(Column, [{
-      key: 'isFilterable',
-      value: function isFilterable() {
-        return this.filterable;
-      }
-    }, {
-      key: 'getFilterFieldName',
-      value: function getFilterFieldName() {
-        return this.filterOn || this.show;
-      }
-    }, {
       key: 'isSortable',
       value: function isSortable() {
         return this.sortable;
@@ -2339,17 +2317,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         });
       }
     }, {
-      key: 'getFilterableValue',
-      value: function getFilterableValue(columnName) {
-        var value = this.getValue(columnName);
-
-        if (!value) {
-          return '';
-        }
-
-        return value.toString().toLowerCase();
-      }
-    }, {
       key: 'getSortableValue',
       value: function getSortableValue(columnName) {
         var dataType = this.getColumn(columnName).dataType;
@@ -2369,19 +2336,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }
 
         return value.toString();
-      }
-    }, {
-      key: 'passesFilter',
-      value: function passesFilter(filter) {
-        var _this = this;
-
-        return this.columns.filter(function (column) {
-          return column.isFilterable();
-        }).map(function (column) {
-          return _this.getFilterableValue(column.getFilterFieldName());
-        }).filter(function (filterableValue) {
-          return filterableValue.indexOf(filter.toLowerCase()) >= 0;
-        }).length;
       }
     }]);
     return Row;

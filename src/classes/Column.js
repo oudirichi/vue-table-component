@@ -3,8 +3,8 @@ import { pick } from '../helpers';
 export default class Column {
   constructor(columnComponent) {
     const properties = pick(columnComponent, [
-      'show', 'label', 'dataType', 'sortable', 'sortBy', 'filterable',
-      'filterOn', 'hidden', 'formatter', 'cellClass', 'headerClass',
+      'show', 'label', 'dataType', 'sortable', 'sortBy',
+      'hidden', 'formatter', 'cellClass', 'headerClass',
     ]);
 
     for (const property in properties) {
@@ -14,14 +14,6 @@ export default class Column {
     }
 
     this.template = columnComponent.$scopedSlots.default;
-  }
-
-  isFilterable() {
-    return this.filterable;
-  }
-
-  getFilterFieldName() {
-    return this.filterOn || this.show;
   }
 
   isSortable() {
