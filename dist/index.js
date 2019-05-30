@@ -1477,7 +1477,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         type: Number,
         default: 1
       },
-      PerPage: {
+      perPage: {
         type: Number,
         default: 10
       },
@@ -1489,7 +1489,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     computed: {
       totalPages: function totalPages() {
-        return this.count ? 0 : Math.ceil(this.count / this.perPage);
+        return this.count ? Math.ceil(this.count / this.perPage) : 0;
       },
       pages: function pages() {
         return this.totalPages === 0 ? [] : this.pageLinks();
@@ -1507,14 +1507,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         return this.currentPage <= this.totalPages - 3 && this.totalPages >= 10;
       },
       shouldShowPagination: function shouldShowPagination() {
-        if (this.totalPages === undefined) {
-          return false;
-        }
-
-        if (this.count === 0) {
-          return false;
-        }
-
         return this.totalPages > 1;
       }
     },

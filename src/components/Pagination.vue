@@ -37,7 +37,7 @@ export default {
       type: Number,
       default: 1,
     },
-    PerPage: {
+    perPage: {
       type: Number,
       default: 10,
     },
@@ -49,7 +49,7 @@ export default {
 
   computed: {
     totalPages() {
-      return this.count ? 0 : Math.ceil(this.count / this.perPage);
+      return this.count ? Math.ceil(this.count / this.perPage) : 0;
     },
 
     pages() {
@@ -73,14 +73,6 @@ export default {
     },
 
     shouldShowPagination() {
-      if (this.totalPages === undefined) {
-        return false;
-      }
-
-      if (this.count === 0) {
-        return false;
-      }
-
       return this.totalPages > 1;
     },
 
