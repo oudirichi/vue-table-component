@@ -4957,7 +4957,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('i', {
     staticClass: "left chevron icon"
-  }, [_vm._v("«")])])]), _vm._v(" "), (_vm.hasFirst) ? _c('li', {
+  }, [_vm._v("«")])])]), _vm._v(" "), (_vm.hasFirstEllipsis) ? _c('li', {
     staticClass: "page-item",
     class: {
       active: _vm.isActive(1)

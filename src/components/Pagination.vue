@@ -8,7 +8,7 @@
         </a>
       </li>
 
-      <li v-if="hasFirst" class="page-item" :class="{ active: isActive(1) }">
+      <li v-if="hasFirstEllipsis" class="page-item" :class="{ active: isActive(1) }">
         <a class="page-link" @click="pageClicked(1)">1?</a>
       </li>
 
