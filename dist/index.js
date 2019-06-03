@@ -1503,28 +1503,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   //
   //
   //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
 
 
   var maxPageBlocks = 9;
-  var ellipsisText = '\u2026';
 
   exports.default = {
     props: {
@@ -1558,12 +1539,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       isActive: function isActive(page) {
         return page.active;
       },
-      pageClicked: function pageClicked(page) {
+      gotoNextPage: function gotoNextPage() {
+        this.$emit('pageChange', this.currentPage + 1);
+      },
+      gotoPage: function gotoPage(page) {
         if (page.type !== 'page' || !page.enabled) {
           return;
         }
 
         this.$emit('pageChange', page.number);
+      },
+      gotoPreviousPage: function gotoPreviousPage() {
+        this.$emit('pageChange', this.currentPage - 1);
       },
       pageLinks: function pageLinks() {
         var pages = [];
@@ -1582,7 +1569,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       renderEllipsis: function renderEllipsis() {
         return {
           type: 'more',
-          text: ellipsisText,
           enabled: true
         };
       },
@@ -1595,13 +1581,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         return renderMethod.call(this, { pageBlock: pageBlock });
       },
       renderPage: function renderPage(_ref2) {
-        var pageBlock = _ref2.pageBlock;
+        var pageNumber = _ref2.pageNumber;
 
-        var isCurrent = pageBlock === this.currentPage;
+        var isCurrent = pageNumber === this.currentPage;
+
         return {
           type: 'page',
-          text: pageBlock,
-          number: pageBlock,
+          text: pageNumber,
           enabled: !isCurrent,
           active: isCurrent
         };
@@ -1614,32 +1600,33 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var firstPossibleEllipsisIndex = 2;
         var lastPossibleEllipsisIndex = maxPageBlocks - 1;
 
-        var firstEllipsisBlockShowed = this.currentPage > (maxPagesBetweenEllipsisBlocks - 1) / 2 + 2;
-        var lastEllipsisBlockShowed = this.currentPage < this.totalPages - (maxPagesBetweenEllipsisBlocks - 1) / 2 - 2;
+        var middleIndexElement = Math.ceil(maxPageBlocks / 2); // eslint-disable-line no-magic-numbers
+        var firstEllipsisBlockShowed = this.currentPage > middleIndexElement;
+        var lastEllipsisBlockShowed = this.currentPage < this.totalPages - middleIndexElement;
 
         if (pageBlock === firstPossibleEllipsisIndex) {
           if (firstEllipsisBlockShowed) {
             return this.renderEllipsis();
           }
 
-          return this.renderPage({ pageBlock: pageBlock });
+          return this.renderPage({ pageNumber: pageBlock });
         } else if (pageBlock === lastPossibleEllipsisIndex) {
           if (lastEllipsisBlockShowed) {
             return this.renderEllipsis();
           }
 
-          return this.renderPage({ pageBlock: this.totalPages - 1 });
+          return this.renderPage({ pageNumber: this.totalPages - 1 });
         }
 
         if (firstEllipsisBlockShowed) {
           if (lastEllipsisBlockShowed) {
-            return this.renderPage({ pageBlock: pageBlock + pageBlock - maxPagesBetweenEllipsisBlocks });
+            return this.renderPage({ pageNumber: pageBlock + this.currentPage - maxPagesBetweenEllipsisBlocks });
           }
 
-          return this.renderPage({ pageBlock: this.totalPages - maxPageBlocks + this.currentPage });
+          return this.renderPage({ pageNumber: this.totalPages - maxPageBlocks + pageBlock });
         }
 
-        return this.renderPage({ pageBlock: pageBlock });
+        return this.renderPage({ pageNumber: pageBlock });
       }
     }
   };
@@ -5054,7 +5041,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        return _vm.pageClicked(_vm.currentPage - 1)
+        return _vm.gotoPreviousPage()
       }
     }
   }, [_c('i', {
@@ -5069,10 +5056,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "page-link",
       on: {
         "click": function($event) {
-          return _vm.pageClicked(page)
+          return _vm.gotoPage(page)
         }
       }
-    }, [_vm._v(_vm._s(page.text))])]) : _vm._e(), _vm._v(" "), (page.type === 'more') ? _c('li', [_c('span', {
+    }, [_vm._v(_vm._s(page.number))])]) : _vm._e(), _vm._v(" "), (page.type === 'more') ? _c('li', [_c('span', {
       staticClass: "pagination-ellipsis"
     }, [_vm._v("…")])]) : _vm._e()]
   }), _vm._v(" "), _c('li', [_c('a', {
@@ -5081,7 +5068,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        return _vm.pageClicked(_vm.currentPage + 1)
+        return _vm.gotoNextPage()
       }
     }
   }, [_c('i', {
