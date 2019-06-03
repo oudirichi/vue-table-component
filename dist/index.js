@@ -1575,7 +1575,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           pages.push(this.renderPageBlock({ pageBlock: pageBlock }));
         }
 
-        pages.push(this.renderPage({ pageBlock: totalShownPages }));
+        pages.push(this.renderPage({ pageBlock: this.totalPages }));
 
         return pages;
       },
