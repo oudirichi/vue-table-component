@@ -1632,7 +1632,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }
 
         if (firstEllipsisBlockShowed) {
-          return this.renderPage({ pageBlock: pageBlock + this.currentPage - maxPagesBetweenEllipsisBlocks });
+          if (lastEllipsisBlockShowed) {
+            return this.renderPage({ pageBlock: pageBlock + this.currentPage - maxPagesBetweenEllipsisBlocks });
+          }
+
+          return this.renderPage({ pageBlock: this.totalPages - maxPageBlocks + this.currentPage });
         }
 
         return this.renderPage({ pageBlock: pageBlock });

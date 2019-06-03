@@ -164,7 +164,11 @@ export default {
       }
 
       if (firstEllipsisBlockShowed) {
-        return this.renderPage({ pageBlock: pageBlock + this.currentPage - maxPagesBetweenEllipsisBlocks });
+        if (lastEllipsisBlockShowed) {
+          return this.renderPage({ pageBlock: pageBlock + this.currentPage - maxPagesBetweenEllipsisBlocks });
+        }
+
+        return this.renderPage({ pageBlock: this.totalPages - maxPageBlocks + this.currentPage });
       }
 
       return this.renderPage({ pageBlock });
