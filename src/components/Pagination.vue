@@ -122,7 +122,7 @@ export default {
 
       return {
         type: 'page',
-        text: pageNumber,
+        number: pageNumber,
         enabled: !isCurrent,
         active: isCurrent,
       };
