@@ -103,19 +103,19 @@ export default {
   },
 
   async mounted() {
-    const columnComponents = this.$slots.default
-      .filter((column) => column.componentInstance)
-      .map((column) => column.componentInstance);
+    // const columnComponents = this.$slots.default
+    //   .filter((column) => column.componentInstance)
+    //   .map((column) => column.componentInstance);
 
-    this.columns = columnComponents.map((column) => new Column(column));
+    // this.columns = columnComponents.map((column) => new Column(column));
 
-    columnComponents.forEach((columnCom) => {
-      Object.keys(columnCom.$options.props).forEach((prop) => columnCom.$watch(prop, () => {
-        this.columns = columnComponents.map((column) => new Column(column));
-      }));
-    });
+    // columnComponents.forEach((columnCom) => {
+    //   Object.keys(columnCom.$options.props).forEach((prop) => columnCom.$watch(prop, () => {
+    //     this.columns = columnComponents.map((column) => new Column(column));
+    //   }));
+    // });
 
-    await this.mapDataToRows();
+    // await this.mapDataToRows();
   },
 
   watch: {
@@ -216,7 +216,6 @@ export default {
 
     paginationEllipsisClick(event) {
       this.$emit('paginationEllipsisClick', event);
-      this.pagination.currentPage = 6;
     },
 
     prepareLocalData() {
