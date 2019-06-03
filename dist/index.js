@@ -1540,7 +1540,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         return page.active;
       },
       ellipsisClick: function ellipsisClick(event) {
-        console.log(event);
         this.$emit('ellipsisClick', event);
       },
       gotoNextPage: function gotoNextPage() {
@@ -2075,6 +2074,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         return mapDataToRows;
       }(),
+      paginationEllipsisClick: function paginationEllipsisClick(event) {
+        this.$emit('paginationEllipsisClick', event);
+        this.pagination.currentPage = 6;
+      },
       prepareLocalData: function prepareLocalData() {
         this.count = this.data.length;
 
@@ -5147,7 +5150,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "count": _vm.count
     },
     on: {
-      "pageChange": _vm.pageChange
+      "pageChange": _vm.pageChange,
+      "ellipsisClick": _vm.paginationEllipsisClick
     }
   })] : _vm._e()], 2)
 },staticRenderFns: []}

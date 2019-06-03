@@ -73,7 +73,6 @@ export default {
     },
 
     ellipsisClick(event) {
-      console.log(event);
       this.$emit('ellipsisClick', event);
     },
 

@@ -42,6 +42,7 @@
             :per-page="pagination.perPage"
             :count="count"
             @pageChange="pageChange"
+            @ellipsisClick="paginationEllipsisClick"
           ></pagination>
         </template>
     </div>
@@ -211,6 +212,11 @@ export default {
           return rowData;
         })
         .map((rowData) => new Row(rowData, this.columns));
+    },
+
+    paginationEllipsisClick(event) {
+      this.$emit('paginationEllipsisClick', event);
+      this.pagination.currentPage = 6;
     },
 
     prepareLocalData() {
