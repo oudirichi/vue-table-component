@@ -96,7 +96,7 @@ export default {
         return;
       }
 
-      this.$emit('pageChange', page);
+      this.$emit('pageChange', page.number);
     },
 
     pageLinks() {
@@ -123,7 +123,7 @@ export default {
     },
 
     renderPageBlock({ pageBlock }) {
-      const hasEllipsisBlocks = this.totalPages <= maxPageBlocks;
+      const hasEllipsisBlocks = this.totalPages > maxPageBlocks;
       const renderMethod = hasEllipsisBlocks ? this.renderPageWithEllipsisBlocks : this.renderPage;
 
       return renderMethod.call(this, { pageBlock });
@@ -134,6 +134,7 @@ export default {
       return {
         type: 'page',
         text: pageBlock,
+        number: pageBlock,
         enabled: !isCurrent,
         active: isCurrent,
       };
