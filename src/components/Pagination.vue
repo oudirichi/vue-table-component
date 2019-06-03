@@ -18,7 +18,7 @@
         </li>
 
         <li v-if="page.type === 'more'">
-          <span class="pagination-ellipsis">&hellip;</span>
+          <span class="pagination-ellipsis" @click="ellipsisClick($event)">&hellip;</span>
         </li>
       </template>
 
@@ -70,6 +70,11 @@ export default {
   methods: {
     isActive(page) {
       return page.active;
+    },
+
+    ellipsisClick(event) {
+      console.log(event);
+      this.$emit('ellipsisClick', event);
     },
 
     gotoNextPage() {
