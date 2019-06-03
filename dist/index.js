@@ -1628,7 +1628,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return this.renderEllipsis();
           }
 
-          return this.renderPage({ pageBlock: pageBlock });
+          return this.renderPage({ pageBlock: this.totalPages - 1 });
         }
 
         if (firstEllipsisBlockShowed) {

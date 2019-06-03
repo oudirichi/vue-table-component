@@ -160,7 +160,7 @@ export default {
           return this.renderEllipsis();
         }
 
-        return this.renderPage({ pageBlock });
+        return this.renderPage({ pageBlock: this.totalPages - 1 });
       }
 
       if (firstEllipsisBlockShowed) {
