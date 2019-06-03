@@ -109,7 +109,7 @@ export default {
         pages.push(this.renderPageBlock({ pageBlock: pageBlock }));
       }
 
-      pages.push(this.renderPage({ pageBlock: totalShownPages }));
+      pages.push(this.renderPage({ pageBlock: this.totalPages }));
 
       return pages;
     },
