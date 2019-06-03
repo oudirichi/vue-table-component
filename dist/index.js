@@ -1555,14 +1555,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       pageLinks: function pageLinks() {
         var pages = [];
 
-        pages.push(this.renderPage({ pageBlock: 1 }));
+        pages.push(this.renderPage({ pageNumber: 1 }));
 
         var totalShownPages = Math.min(this.totalPages, maxPageBlocks);
         for (var pageBlock = 2; pageBlock < totalShownPages; pageBlock++) {
           pages.push(this.renderPageBlock({ pageBlock: pageBlock }));
         }
 
-        pages.push(this.renderPage({ pageBlock: this.totalPages }));
+        pages.push(this.renderPage({ pageNumber: this.totalPages }));
 
         return pages;
       },
@@ -1576,9 +1576,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var pageBlock = _ref.pageBlock;
 
         var hasEllipsisBlocks = this.totalPages > maxPageBlocks;
-        var renderMethod = hasEllipsisBlocks ? this.renderPageWithEllipsisBlocks : this.renderPage;
 
-        return renderMethod.call(this, { pageBlock: pageBlock });
+        if (hasEllipsisBlocks) {
+          return this.renderPageWithEllipsisBlocks({ pageBlock: pageBlock });
+        }
+
+        return this.renderPage({ pageNumber: pageBlock });
       },
       renderPage: function renderPage(_ref2) {
         var pageNumber = _ref2.pageNumber;

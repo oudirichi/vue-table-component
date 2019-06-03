@@ -91,14 +91,14 @@ export default {
     pageLinks() {
       const pages = [];
 
-      pages.push(this.renderPage({ pageBlock: 1 }));
+      pages.push(this.renderPage({ pageNumber: 1 }));
 
       const totalShownPages = Math.min(this.totalPages, maxPageBlocks);
       for (let pageBlock = 2; pageBlock < totalShownPages; pageBlock++) {
         pages.push(this.renderPageBlock({ pageBlock: pageBlock }));
       }
 
-      pages.push(this.renderPage({ pageBlock: this.totalPages }));
+      pages.push(this.renderPage({ pageNumber: this.totalPages }));
 
       return pages;
     },
@@ -112,9 +112,12 @@ export default {
 
     renderPageBlock({ pageBlock }) {
       const hasEllipsisBlocks = this.totalPages > maxPageBlocks;
-      const renderMethod = hasEllipsisBlocks ? this.renderPageWithEllipsisBlocks : this.renderPage;
 
-      return renderMethod.call(this, { pageBlock });
+      if (hasEllipsisBlocks) {
+        return this.renderPageWithEllipsisBlocks({ pageBlock });
+      }
+
+      return this.renderPage({ pageNumber: pageBlock });
     },
 
     renderPage({ pageNumber }) {
