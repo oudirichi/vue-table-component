@@ -1563,7 +1563,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return;
         }
 
-        this.$emit('pageChange', page);
+        this.$emit('pageChange', page.number);
       },
       pageLinks: function pageLinks() {
         var pages = [];
@@ -1589,7 +1589,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       renderPageBlock: function renderPageBlock(_ref) {
         var pageBlock = _ref.pageBlock;
 
-        var hasEllipsisBlocks = this.totalPages <= maxPageBlocks;
+        var hasEllipsisBlocks = this.totalPages > maxPageBlocks;
         var renderMethod = hasEllipsisBlocks ? this.renderPageWithEllipsisBlocks : this.renderPage;
 
         return renderMethod.call(this, { pageBlock: pageBlock });
@@ -1601,6 +1601,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         return {
           type: 'page',
           text: pageBlock,
+          number: pageBlock,
           enabled: !isCurrent,
           active: isCurrent
         };
