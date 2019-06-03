@@ -1880,10 +1880,29 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     },
     mounted: function () {
       var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
+        var columnComponents;
         return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                columnComponents = this.$slots.default;
+
+                console.log(this.$slots);
+                console.log(columnComponents);
+                //   .filter((column) => column.componentInstance)
+                //   .map((column) => column.componentInstance);
+
+                // this.columns = columnComponents.map((column) => new Column(column));
+
+                // columnComponents.forEach((columnCom) => {
+                //   Object.keys(columnCom.$options.props).forEach((prop) => columnCom.$watch(prop, () => {
+                //     this.columns = columnComponents.map((column) => new Column(column));
+                //   }));
+                // });
+
+                // await this.mapDataToRows();
+
+              case 3:
               case 'end':
                 return _context.stop();
             }

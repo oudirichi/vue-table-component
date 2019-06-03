@@ -103,7 +103,9 @@ export default {
   },
 
   async mounted() {
-    // const columnComponents = this.$slots.default
+    const columnComponents = this.$slots.default;
+    console.log(this.$slots);
+    console.log(columnComponents);
     //   .filter((column) => column.componentInstance)
     //   .map((column) => column.componentInstance);
 
