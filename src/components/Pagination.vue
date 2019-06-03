@@ -26,7 +26,7 @@
       </li>
  -->
 
-      <template v-for="page in pages" :key="page.text">
+      <template v-for="page in pages">
         <li
           v-if="page.type === 'page'"
           class="page-item"

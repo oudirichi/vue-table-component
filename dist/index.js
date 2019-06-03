@@ -1469,6 +1469,63 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+
+
+  var maxPageBlocks = 9;
+  var ellipsisText = '\u2026';
+
   exports.default = {
     props: {
       currentPage: {
@@ -1492,18 +1549,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       pages: function pages() {
         return this.totalPages === 0 ? [] : this.pageLinks();
       },
-      hasFirst: function hasFirst() {
-        return this.currentPage >= 4 || this.totalPages < 10;
-      },
-      hasLast: function hasLast() {
-        return this.currentPage <= this.totalPages - 3 || this.totalPages < 10;
-      },
-      hasFirstEllipsis: function hasFirstEllipsis() {
-        return this.currentPage >= 4 && this.totalPages >= 10;
-      },
-      hasLastEllipsis: function hasLastEllipsis() {
-        return this.currentPage <= this.totalPages - 3 && this.totalPages >= 10;
-      },
       shouldShowPagination: function shouldShowPagination() {
         return this.totalPages > 1;
       }
@@ -1511,12 +1556,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     methods: {
       isActive: function isActive(page) {
-        var currentPage = this.currentPage || 1;
-
-        return currentPage === page;
+        return page.active;
       },
       pageClicked: function pageClicked(page) {
-        if (page === '...' || page === this.currentPage || page > this.totalPages || page < 1) {
+        if (page.type !== 'page' || !page.enabled) {
           return;
         }
 
@@ -1525,19 +1568,73 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       pageLinks: function pageLinks() {
         var pages = [];
 
-        var left = 2;
-        var right = this.totalPages - 1;
+        pages.push(this.renderPage({ pageBlock: 1 }));
 
-        if (this.totalPages >= 10) {
-          left = Math.max(1, this.currentPage - 2);
-          right = Math.min(this.currentPage + 2, this.totalPages);
+        var totalShownPages = Math.min(this.totalPages, maxPageBlocks);
+        for (var pageBlock = 2; pageBlock < totalShownPages; pageBlock++) {
+          pages.push(this.renderPageBlock({ pageBlock: pageBlock }));
         }
 
-        for (var i = left; i <= right; i++) {
-          pages.push(i);
-        }
+        pages.push(this.renderPage({ pageBlock: totalShownPages }));
 
         return pages;
+      },
+      renderEllipsis: function renderEllipsis() {
+        return {
+          type: 'more',
+          text: ellipsisText,
+          enabled: true
+        };
+      },
+      renderPageBlock: function renderPageBlock(_ref) {
+        var pageBlock = _ref.pageBlock;
+
+        var hasEllipsisBlocks = this.totalPages <= maxPageBlocks;
+        var renderMethod = hasEllipsisBlocks ? this.renderPageWithEllipsisBlocks : this.renderPage;
+
+        return renderMethod.call(this, { pageBlock: pageBlock });
+      },
+      renderPage: function renderPage(_ref2) {
+        var pageBlock = _ref2.pageBlock;
+
+        var isCurrent = pageBlock === this.currentPage;
+        return {
+          type: 'page',
+          text: pageBlock,
+          enabled: !isCurrent,
+          active: isCurrent
+        };
+      },
+      renderPageWithEllipsisBlocks: function renderPageWithEllipsisBlocks(_ref3) {
+        var pageBlock = _ref3.pageBlock;
+
+        var maxPagesBetweenEllipsisBlocks = 5;
+
+        var firstPossibleEllipsisIndex = 2;
+        var lastPossibleEllipsisIndex = maxPageBlocks - 1;
+
+        var firstEllipsisBlockShowed = this.currentPage > (maxPagesBetweenEllipsisBlocks - 1) / 2 + 2;
+        var lastEllipsisBlockShowed = this.currentPage < this.totalPages - (maxPagesBetweenEllipsisBlocks - 1) / 2 - 2;
+
+        if (pageBlock === firstPossibleEllipsisIndex) {
+          if (firstEllipsisBlockShowed) {
+            return this.renderEllipsis();
+          }
+
+          return this.renderPage({ pageBlock: pageBlock });
+        } else if (pageBlock === lastPossibleEllipsisIndex) {
+          if (lastEllipsisBlockShowed) {
+            return this.renderEllipsis();
+          }
+
+          return this.renderPage({ pageBlock: pageBlock });
+        }
+
+        if (firstEllipsisBlockShowed) {
+          return this.renderPage({ pageBlock: pageBlock + this.currentPage - maxPagesBetweenEllipsisBlocks });
+        }
+
+        return this.renderPage({ pageBlock: pageBlock });
       }
     }
   };
@@ -4957,26 +5054,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('i', {
     staticClass: "left chevron icon"
-  }, [_vm._v("«")])])]), _vm._v(" "), (_vm.hasFirstEllipsis) ? _c('li', {
-    staticClass: "page-item",
-    class: {
-      active: _vm.isActive(1)
-    }
-  }, [_c('a', {
-    staticClass: "page-link",
-    on: {
-      "click": function($event) {
-        return _vm.pageClicked(1)
-      }
-    }
-  }, [_vm._v("1?")])]) : _vm._e(), _vm._v(" "), (_vm.hasFirstEllipsis) ? _c('li', [_c('span', {
-    staticClass: "pagination-ellipsis"
-  }, [_vm._v("…")])]) : _vm._e(), _vm._v(" "), _vm._l((_vm.pages), function(page) {
-    return _c('li', {
-      key: page,
+  }, [_vm._v("«")])])]), _vm._v(" "), _vm._l((_vm.pages), function(page) {
+    return [(page.type === 'page') ? _c('li', {
       staticClass: "page-item",
       class: {
-        active: _vm.isActive(page), disabled: page === '...'
+        active: page.active, disabled: !page.enabled
       }
     }, [_c('a', {
       staticClass: "page-link",
@@ -4985,22 +5067,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           return _vm.pageClicked(page)
         }
       }
-    }, [_vm._v(_vm._s(page))])])
-  }), _vm._v(" "), (_vm.hasLastEllipsis) ? _c('li', [_c('span', {
-    staticClass: "pagination-ellipsis"
-  }, [_vm._v("…")])]) : _vm._e(), _vm._v(" "), (_vm.hasLast) ? _c('li', {
-    staticClass: "page-item",
-    class: {
-      active: _vm.isActive(this.totalPages)
-    }
-  }, [_c('a', {
-    staticClass: "page-link",
-    on: {
-      "click": function($event) {
-        return _vm.pageClicked(_vm.totalPages)
-      }
-    }
-  }, [_vm._v(_vm._s(_vm.totalPages))])]) : _vm._e(), _vm._v(" "), _c('li', [_c('a', {
+    }, [_vm._v(_vm._s(page.text))])]) : _vm._e(), _vm._v(" "), (page.type === 'more') ? _c('li', [_c('span', {
+      staticClass: "pagination-ellipsis"
+    }, [_vm._v("…")])]) : _vm._e()]
+  }), _vm._v(" "), _c('li', [_c('a', {
     class: {
       disabled: _vm.currentPage === _vm.totalPages
     },
