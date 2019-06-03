@@ -8,7 +8,7 @@
         </a>
       </li>
 
-      <li v-if="hasFirstEllipsis" class="page-item" :class="{ active: isActive(1) }">
+      <!-- <li v-if="hasFirst" class="page-item" :class="{ active: isActive(1) }">
         <a class="page-link" @click="pageClicked(1)">1?</a>
       </li>
 
@@ -24,6 +24,22 @@
         :class="{ active: isActive(this.totalPages) }">
         <a class="page-link" @click="pageClicked(totalPages)">{{totalPages}}</a>
       </li>
+ -->
+
+      <template v-for="page in pages" :key="page.text">
+        <li
+          v-if="page.type === 'page'"
+          class="page-item"
+          :class="{ active: page.active, disabled: !page.enabled }"
+        >
+          <a class="page-link" @click="pageClicked(page)">{{ page.text }}</a>
+        </li>
+
+        <li v-if="page.type === 'more'">
+          <span class="pagination-ellipsis">&hellip;</span>
+        </li>
+      </template>
+
       <li>
         <a :class="{ disabled: currentPage === totalPages }"
            @click="pageClicked( currentPage + 1 )">
@@ -35,6 +51,9 @@
 </template>
 
 <script>
+
+const maxPageBlocks = 9;
+const ellipsisText = '\u2026';
 
 export default {
   props: {
@@ -61,22 +80,6 @@ export default {
       return this.totalPages === 0 ? [] : this.pageLinks();
     },
 
-    hasFirst() {
-      return this.currentPage >= 4 || this.totalPages < 10;
-    },
-
-    hasLast() {
-      return this.currentPage <= this.totalPages - 3 || this.totalPages < 10;
-    },
-
-    hasFirstEllipsis() {
-      return this.currentPage >= 4 && this.totalPages >= 10;
-    },
-
-    hasLastEllipsis() {
-      return this.currentPage <= this.totalPages - 3 && this.totalPages >= 10;
-    },
-
     shouldShowPagination() {
       return this.totalPages > 1;
     },
@@ -85,16 +88,11 @@ export default {
 
   methods: {
     isActive(page) {
-      const currentPage = this.currentPage || 1;
-
-      return currentPage === page;
+      return page.active;
     },
 
     pageClicked(page) {
-      if (page === '...' ||
-        page === this.currentPage ||
-        page > this.totalPages ||
-        page < 1) {
+      if (page.type !== 'page' || !page.enabled) {
         return;
       }
 
@@ -104,19 +102,71 @@ export default {
     pageLinks() {
       const pages = [];
 
-      let left = 2;
-      let right = this.totalPages - 1;
+      pages.push(this.renderPage({ pageBlock: 1 }));
 
-      if (this.totalPages >= 10) {
-        left = Math.max(1, this.currentPage - 2);
-        right = Math.min(this.currentPage + 2, this.totalPages);
+      const totalShownPages = Math.min(this.totalPages, maxPageBlocks);
+      for (let pageBlock = 2; pageBlock < totalShownPages; pageBlock++) {
+        pages.push(this.renderPageBlock({ pageBlock: pageBlock }));
       }
 
-      for (let i = left; i <= right; i++) {
-        pages.push(i);
-      }
+      pages.push(this.renderPage({ pageBlock: totalShownPages }));
 
       return pages;
+    },
+
+    renderEllipsis() {
+      return {
+        type: 'more',
+        text: ellipsisText,
+        enabled: true,
+      };
+    },
+
+    renderPageBlock({ pageBlock }) {
+      const hasEllipsisBlocks = this.totalPages <= maxPageBlocks;
+      const renderMethod = hasEllipsisBlocks ? this.renderPageWithEllipsisBlocks : this.renderPage;
+
+      return renderMethod.call(this, { pageBlock });
+    },
+
+    renderPage({ pageBlock }) {
+      const isCurrent = pageBlock === this.currentPage;
+      return {
+        type: 'page',
+        text: pageBlock,
+        enabled: !isCurrent,
+        active: isCurrent,
+      };
+    },
+
+    renderPageWithEllipsisBlocks({ pageBlock }) {
+      const maxPagesBetweenEllipsisBlocks = 5;
+
+      const firstPossibleEllipsisIndex = 2;
+      const lastPossibleEllipsisIndex = maxPageBlocks - 1;
+
+      const firstEllipsisBlockShowed = this.currentPage > (((maxPagesBetweenEllipsisBlocks - 1) / 2) + 2);
+      const lastEllipsisBlockShowed = this.currentPage < (this.totalPages - ((maxPagesBetweenEllipsisBlocks - 1) / 2) - 2);
+
+      if (pageBlock === firstPossibleEllipsisIndex) {
+        if (firstEllipsisBlockShowed) {
+          return this.renderEllipsis();
+        }
+
+        return this.renderPage({ pageBlock });
+      } else if (pageBlock === lastPossibleEllipsisIndex) {
+        if (lastEllipsisBlockShowed) {
+          return this.renderEllipsis();
+        }
+
+        return this.renderPage({ pageBlock });
+      }
+
+      if (firstEllipsisBlockShowed) {
+        return this.renderPage({ pageBlock: pageBlock + this.currentPage - maxPagesBetweenEllipsisBlocks });
+      }
+
+      return this.renderPage({ pageBlock });
     },
   },
 };
