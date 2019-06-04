@@ -10,19 +10,19 @@
 </template>
 
 <script>
-    import TableCell from './TableCell';
+import TableCell from './TableCell';
 
-    export default {
-        props: ['columns', 'row'],
+export default {
+  props: ['columns', 'row'],
 
-        components: {
-            TableCell,
-        },
+  components: {
+    TableCell,
+  },
 
-        computed: {
-            visibleColumns() {
-                return this.columns.filter(column => ! column.hidden);
-            },
-        },
-    };
+  computed: {
+    visibleColumns() {
+      return this.columns.filter((column) => !column.hidden);
+    },
+  },
+};
 </script>
