@@ -1,8 +1,8 @@
 <template>
   <nav v-if="shouldShowPagination">
     <ul class="pagination justify-content-center">
-      <li :class="{ disabled: currentPage === 1 }">
-        <a :class="{ disabled: currentPage === 1 }"
+      <li :class="{ disabled: gotoPreviousDisabled }">
+        <a :class="{ disabled: gotoPreviousDisabled }"
            @click="gotoPreviousPage()">
           <i class="left chevron icon">«</i>
         </a>
@@ -22,8 +22,8 @@
         </li>
       </template>
 
-      <li>
-        <a :class="{ disabled: currentPage === totalPages }"
+      <li :class="{ disabled: gotoNextDisabled }">
+        <a :class="{ disabled: gotoNextDisabled }"
            @click="gotoNextPage()">
           <i class="right chevron icon">»</i>
         </a>
@@ -65,6 +65,13 @@ export default {
       return this.totalPages > 1;
     },
 
+    gotoNextDisabled() {
+      return this.currentPage === this.totalPages;
+    },
+
+    gotoPreviousDisabled() {
+      return this.currentPage === 1;
+    },
   },
 
   methods: {
@@ -77,18 +84,20 @@ export default {
     },
 
     gotoNextPage() {
+      if (this.gotoNextDisabled) return;
+
       this.$emit('pageChange', this.currentPage + 1);
     },
 
     gotoPage(page) {
-      if (page.type !== 'page' || !page.enabled) {
-        return;
-      }
+      if (page.type !== 'page' || !page.enabled) return;
 
       this.$emit('pageChange', page.number);
     },
 
     gotoPreviousPage() {
+      if (this.gotoPreviousDisabled) return;
+
       this.$emit('pageChange', this.currentPage - 1);
     },
 

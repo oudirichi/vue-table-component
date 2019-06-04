@@ -1532,6 +1532,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       },
       shouldShowPagination: function shouldShowPagination() {
         return this.totalPages > 1;
+      },
+      gotoNextDisabled: function gotoNextDisabled() {
+        return this.currentPage === this.totalPages;
+      },
+      gotoPreviousDisabled: function gotoPreviousDisabled() {
+        return this.currentPage === 1;
       }
     },
 
@@ -1543,16 +1549,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         this.$emit('ellipsisClick', event);
       },
       gotoNextPage: function gotoNextPage() {
+        if (this.gotoNextDisabled) return;
+
         this.$emit('pageChange', this.currentPage + 1);
       },
       gotoPage: function gotoPage(page) {
-        if (page.type !== 'page' || !page.enabled) {
-          return;
-        }
+        if (page.type !== 'page' || !page.enabled) return;
 
         this.$emit('pageChange', page.number);
       },
       gotoPreviousPage: function gotoPreviousPage() {
+        if (this.gotoPreviousDisabled) return;
+
         this.$emit('pageChange', this.currentPage - 1);
       },
       pageLinks: function pageLinks() {
@@ -5042,11 +5050,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "pagination justify-content-center"
   }, [_c('li', {
     class: {
-      disabled: _vm.currentPage === 1
+      disabled: _vm.gotoPreviousDisabled
     }
   }, [_c('a', {
     class: {
-      disabled: _vm.currentPage === 1
+      disabled: _vm.gotoPreviousDisabled
     },
     on: {
       "click": function($event) {
@@ -5076,9 +5084,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }, [_vm._v("…")])]) : _vm._e()]
-  }), _vm._v(" "), _c('li', [_c('a', {
+  }), _vm._v(" "), _c('li', {
     class: {
-      disabled: _vm.currentPage === _vm.totalPages
+      disabled: _vm.gotoNextDisabled
+    }
+  }, [_c('a', {
+    class: {
+      disabled: _vm.gotoNextDisabled
     },
     on: {
       "click": function($event) {
