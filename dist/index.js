@@ -5099,7 +5099,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_c('i', {
-    staticClass: "fa fa-angle-left"
+    staticClass: "fa fa-angle-right"
   }, [_vm._v("»")])])])], 2)]) : _vm._e()
 },staticRenderFns: []}
 module.exports.render._withStripped = true
