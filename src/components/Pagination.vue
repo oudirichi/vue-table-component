@@ -48,7 +48,7 @@ export default {
     },
     count: {
       type: Number,
-      default: undefined,
+      required: true,
     },
   },
 
