@@ -5060,8 +5060,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_c('i', {
-    staticClass: "left chevron icon"
-  }, [_vm._v("«")])])]), _vm._v(" "), _vm._l((_vm.pages), function(page) {
+    staticClass: "fa fa-angle-left"
+  })])]), _vm._v(" "), _vm._l((_vm.pages), function(page) {
     return [(page.type === 'page') ? _c('li', {
       staticClass: "page-item",
       class: {
@@ -5099,7 +5099,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_c('i', {
-    staticClass: "right chevron icon"
+    staticClass: "fa fa-angle-left"
   }, [_vm._v("»")])])])], 2)]) : _vm._e()
 },staticRenderFns: []}
 module.exports.render._withStripped = true

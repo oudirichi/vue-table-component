@@ -4,7 +4,7 @@
       <li>
         <a :class="{ disabled: gotoPreviousDisabled }"
            @click="gotoPreviousPage()">
-          <i class="left chevron icon">«</i>
+          <i class="fa fa-angle-left"></i>
         </a>
       </li>
 
@@ -25,7 +25,7 @@
       <li :class="{ disabled: gotoNextDisabled }">
         <a :class="{ disabled: gotoNextDisabled }"
            @click="gotoNextPage()">
-          <i class="right chevron icon">»</i>
+          <i class="fa fa-angle-left">»</i>
         </a>
       </li>
     </ul>
