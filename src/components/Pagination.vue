@@ -25,7 +25,7 @@
       <li :class="{ disabled: gotoNextDisabled }">
         <a :class="{ disabled: gotoNextDisabled }"
            @click="gotoNextPage()">
-          <i class="fa fa-angle-right">»</i>
+          <i class="fa fa-angle-right"></i>
         </a>
       </li>
     </ul>
