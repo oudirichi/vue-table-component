@@ -5046,13 +5046,11 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return (_vm.shouldShowPagination) ? _c('nav', [_c('ul', {
+  return (_vm.shouldShowPagination) ? _c('nav', {
+    staticClass: "pager"
+  }, [_c('ul', {
     staticClass: "pagination justify-content-center"
-  }, [_c('li', {
-    class: {
-      disabled: _vm.gotoPreviousDisabled
-    }
-  }, [_c('a', {
+  }, [_c('li', [_c('a', {
     class: {
       disabled: _vm.gotoPreviousDisabled
     },
@@ -5067,10 +5065,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     return [(page.type === 'page') ? _c('li', {
       staticClass: "page-item",
       class: {
-        active: page.active, disabled: !page.enabled
+        active: page.active
       }
     }, [_c('a', {
       staticClass: "page-link",
+      class: {
+        disabled: !page.enabled
+      },
       on: {
         "click": function($event) {
           return _vm.gotoPage(page)

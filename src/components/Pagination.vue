@@ -1,7 +1,7 @@
 <template>
-  <nav v-if="shouldShowPagination">
+  <nav v-if="shouldShowPagination" class="pager">
     <ul class="pagination justify-content-center">
-      <li :class="{ disabled: gotoPreviousDisabled }">
+      <li>
         <a :class="{ disabled: gotoPreviousDisabled }"
            @click="gotoPreviousPage()">
           <i class="left chevron icon">«</i>
@@ -12,9 +12,9 @@
         <li
           v-if="page.type === 'page'"
           class="page-item"
-          :class="{ active: page.active, disabled: !page.enabled }"
+          :class="{ active: page.active }"
         >
-          <a class="page-link" @click="gotoPage(page)">{{ page.number }}</a>
+          <a class="page-link" @click="gotoPage(page)" :class="{ disabled: !page.enabled }">{{ page.number }}</a>
         </li>
 
         <li v-if="page.type === 'more'">
