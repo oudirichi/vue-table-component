@@ -1,28 +1,31 @@
 <template>
-  <nav v-if="shouldShowPagination">
+  <nav v-if="shouldShowPagination" class="pager">
     <ul class="pagination justify-content-center">
-      <li :class="{ disabled: pagination.currentPage === 1 }">
-        <a :class="{ disabled: pagination.currentPage === 1 }"
-           @click="pageClicked( pagination.currentPage - 1 )">
-          <i class="left chevron icon">«</i>
+      <li>
+        <a :class="{ disabled: gotoPreviousDisabled }"
+           @click="gotoPreviousPage()">
+          <i class="fa fa-angle-left"></i>
         </a>
       </li>
-      <li v-if="hasFirst" class="page-item" :class="{ active: isActive(1) }">
-        <a class="page-link" @click="pageClicked(1)">1</a>
-      </li>
-      <li v-if="hasFirstEllipsis"><span class="pagination-ellipsis">&hellip;</span></li>
-      <li class="page-item" :class="{ active: isActive(page), disabled: page === '...' }" v-for="page in pages" :key="page">
-        <a class="page-link" @click="pageClicked(page)">{{ page }}</a>
-      </li>
-      <li v-if="hasLastEllipsis"><span class="pagination-ellipsis">&hellip;</span></li>
-      <li v-if="hasLast" class="page-item"
-        :class="{ active: isActive(this.pagination.totalPages) }">
-        <a class="page-link" @click="pageClicked(pagination.totalPages)">{{pagination.totalPages}}</a>
-      </li>
-      <li>
-        <a :class="{ disabled: pagination.currentPage === pagination.totalPages }"
-           @click="pageClicked( pagination.currentPage + 1 )">
-          <i class="right chevron icon">»</i>
+
+      <template v-for="page in pages">
+        <li
+          v-if="page.type === 'page'"
+          class="page-item"
+          :class="{ active: page.active }"
+        >
+          <a class="page-link" @click="gotoPage(page)" :class="{ disabled: !page.enabled }">{{ page.number }}</a>
+        </li>
+
+        <li v-if="page.type === 'more'">
+          <span class="pagination-ellipsis" @click="ellipsisClick($event)">&hellip;</span>
+        </li>
+      </template>
+
+      <li :class="{ disabled: gotoNextDisabled }">
+        <a :class="{ disabled: gotoNextDisabled }"
+           @click="gotoNextPage()">
+          <i class="fa fa-angle-right"></i>
         </a>
       </li>
     </ul>
@@ -31,83 +34,149 @@
 
 <script>
 
+const maxPageBlocks = 9;
+
 export default {
   props: {
-    pagination: {
-      type: Object,
-      default: () => ({}),
+    currentPage: {
+      type: Number,
+      default: 1,
+    },
+    perPage: {
+      type: Number,
+      default: 10,
+    },
+    count: {
+      type: Number,
+      required: true,
     },
   },
 
   computed: {
+    totalPages() {
+      return this.count ? Math.ceil(this.count / this.perPage) : 0;
+    },
+
     pages() {
-      return this.pagination.totalPages === undefined ? [] : this.pageLinks();
-    },
-
-    hasFirst() {
-      return this.pagination.currentPage >= 4 || this.pagination.totalPages < 10;
-    },
-
-    hasLast() {
-      return this.pagination.currentPage <= this.pagination.totalPages - 3 || this.pagination.totalPages < 10;
-    },
-
-    hasFirstEllipsis() {
-      return this.pagination.currentPage >= 4 && this.pagination.totalPages >= 10;
-    },
-
-    hasLastEllipsis() {
-      return this.pagination.currentPage <= this.pagination.totalPages - 3 && this.pagination.totalPages >= 10;
+      return this.totalPages === 0 ? [] : this.pageLinks();
     },
 
     shouldShowPagination() {
-      if (this.pagination.totalPages === undefined) {
-        return false;
-      }
-
-      if (this.pagination.count === 0) {
-        return false;
-      }
-
-      return this.pagination.totalPages > 1;
+      return this.totalPages > 1;
     },
 
+    gotoNextDisabled() {
+      return this.currentPage === this.totalPages;
+    },
+
+    gotoPreviousDisabled() {
+      return this.currentPage === 1;
+    },
   },
 
   methods: {
     isActive(page) {
-      const currentPage = this.pagination.currentPage || 1;
-
-      return currentPage === page;
+      return page.active;
     },
 
-    pageClicked(page) {
-      if (page === '...' ||
-        page === this.pagination.currentPage ||
-        page > this.pagination.totalPages ||
-        page < 1) {
-        return;
-      }
+    ellipsisClick(event) {
+      this.$emit('ellipsisClick', event);
+    },
 
-      this.$emit('pageChange', page);
+    gotoNextPage() {
+      if (this.gotoNextDisabled) return;
+
+      this.$emit('pageChange', this.currentPage + 1);
+    },
+
+    gotoPage(page) {
+      if (page.type !== 'page' || !page.enabled) return;
+
+      this.$emit('pageChange', page.number);
+    },
+
+    gotoPreviousPage() {
+      if (this.gotoPreviousDisabled) return;
+
+      this.$emit('pageChange', this.currentPage - 1);
     },
 
     pageLinks() {
       const pages = [];
 
-      let left = 2;
-      let right = this.pagination.totalPages - 1;
+      pages.push(this.renderPage({ pageNumber: 1 }));
 
-      if (this.pagination.totalPages >= 10) {
-        left = Math.max(1, this.pagination.currentPage - 2);
-        right = Math.min(this.pagination.currentPage + 2, this.pagination.totalPages);
+      const totalShownPages = Math.min(this.totalPages, maxPageBlocks);
+      for (let pageBlock = 2; pageBlock < totalShownPages; pageBlock++) {
+        pages.push(this.renderPageBlock({ pageBlock: pageBlock }));
       }
 
-      for (let i = left; i <= right; i++) {
-        pages.push(i);
-      }
+      pages.push(this.renderPage({ pageNumber: this.totalPages }));
 
       return pages;
+    },
+
+    renderEllipsis() {
+      return {
+        type: 'more',
+        enabled: true,
+      };
+    },
+
+    renderPageBlock({ pageBlock }) {
+      const hasEllipsisBlocks = this.totalPages > maxPageBlocks;
+
+      if (hasEllipsisBlocks) {
+        return this.renderPageWithEllipsisBlocks({ pageBlock });
+      }
+
+      return this.renderPage({ pageNumber: pageBlock });
+    },
+
+    renderPage({ pageNumber }) {
+      const isCurrent = pageNumber === this.currentPage;
+
+      return {
+        type: 'page',
+        number: pageNumber,
+        enabled: !isCurrent,
+        active: isCurrent,
+      };
+    },
+
+    renderPageWithEllipsisBlocks({ pageBlock }) {
+      const maxPagesBetweenEllipsisBlocks = 5;
+
+      const firstPossibleEllipsisIndex = 2;
+      const lastPossibleEllipsisIndex = maxPageBlocks - 1;
+
+      const middleIndexElement = Math.ceil(maxPageBlocks / 2); // eslint-disable-line no-magic-numbers
+      const firstEllipsisBlockShowed = this.currentPage > middleIndexElement;
+      const lastEllipsisBlockShowed = this.currentPage < (this.totalPages - middleIndexElement);
+
+      if (pageBlock === firstPossibleEllipsisIndex) {
+        if (firstEllipsisBlockShowed) {
+          return this.renderEllipsis();
+        }
+
+        return this.renderPage({ pageNumber: pageBlock });
+      } else if (pageBlock === lastPossibleEllipsisIndex) {
+        if (lastEllipsisBlockShowed) {
+          return this.renderEllipsis();
+        }
+
+        return this.renderPage({ pageNumber: this.totalPages - 1 });
+      }
+
+      if (firstEllipsisBlockShowed) {
+        if (lastEllipsisBlockShowed) {
+          return this.renderPage({ pageNumber: pageBlock + this.currentPage - maxPagesBetweenEllipsisBlocks });
+        }
+
+        return this.renderPage({ pageNumber: this.totalPages - maxPageBlocks + pageBlock });
+      }
+
+      return this.renderPage({ pageNumber: pageBlock });
     },
   },
 };

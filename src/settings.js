@@ -4,8 +4,6 @@ const settings = {
   tbodyClass: '',
   headerClass: '',
   cellClass: '',
-  filterInputClass: '',
-  filterPlaceholder: 'Filter table…',
   filterNoResults: 'There are no matching rows',
 };
 

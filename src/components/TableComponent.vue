@@ -36,7 +36,15 @@
             <slot></slot>
         </div>
 
-        <pagination v-if="pagination" :pagination="pagination" @pageChange="pageChange"></pagination>
+        <template v-if="pagination">
+          <pagination
+            :current-page="pagination.currentPage"
+            :per-page="pagination.perPage"
+            :count="count"
+            @pageChange="pageChange"
+            @ellipsisClick="paginationEllipsisClick"
+          ></pagination>
+        </template>
     </div>
 </template>
 
@@ -59,8 +67,8 @@ export default {
 
   props: {
     data: { default: () => [], type: [Array, Function] },
+    pagination: { type: Object, default: undefined },
 
-    showFilter: { default: true },
     showCaption: { default: true },
 
     sortBy: { default: '', type: String },
@@ -72,20 +80,17 @@ export default {
     tableClass: { default: () => settings.tableClass },
     theadClass: { default: () => settings.theadClass },
     tbodyClass: { default: () => settings.tbodyClass },
-    filterInputClass: { default: () => settings.filterInputClass },
-    filterPlaceholder: { default: () => settings.filterPlaceholder },
     filterNoResults: { default: () => settings.filterNoResults },
   },
 
   data: () => ({
     columns: [],
     rows: [],
-    filter: '',
     sort: {
       fieldName: '',
       order: '',
     },
-    pagination: null,
+    count: undefined,
 
     localSettings: {},
   }),
@@ -114,14 +119,6 @@ export default {
   },
 
   watch: {
-    filter() {
-      if (!this.usesLocalData) {
-        this.mapDataToRows();
-      }
-
-      this.saveState();
-    },
-
     data() {
       if (this.usesLocalData) {
         this.mapDataToRows();
@@ -142,10 +139,6 @@ export default {
       return classList('table-component__table__body', this.tbodyClass);
     },
 
-    fullFilterInputClass() {
-      return classList('table-component__filter__field', this.filterInputClass);
-    },
-
     ariaCaption() {
       if (this.sort.fieldName === '') {
         return 'Table not sorted';
@@ -160,19 +153,15 @@ export default {
     },
 
     displayedRows() {
-      if (!this.usesLocalData) {
-        return this.sortedRows;
+      let rows = this.sortedRows;
+
+      if (this.usesLocalData && this.pagination) {
+        const lastPage = this.pagination.currentPage - 1;
+        const lastElementOfLastPageIndex = lastPage * this.pagination.perPage;
+        rows = rows.slice(lastElementOfLastPageIndex, lastElementOfLastPageIndex + this.pagination.perPage);
       }
 
-      if (!this.showFilter) {
-        return this.sortedRows;
-      }
-
-      if (!this.columns.filter((column) => column.isFilterable()).length) {
-        return this.sortedRows;
-      }
-
-      return this.sortedRows.filter((row) => row.passesFilter(this.filter));
+      return rows;
     },
 
     sortedRows() {
@@ -195,10 +184,6 @@ export default {
       }
 
       return this.rows.sort(sortColumn.getSortPredicate(this.sort.order, this.columns));
-    },
-
-    filterableColumnExists() {
-      return this.columns.filter((c) => c.isFilterable()).length > 0;
     },
 
     storageKey() {
@@ -229,8 +214,12 @@ export default {
         .map((rowData) => new Row(rowData, this.columns));
     },
 
+    paginationEllipsisClick(event) {
+      this.$emit('paginationEllipsisClick', event);
+    },
+
     prepareLocalData() {
-      this.pagination = null;
+      this.count = this.data.length;
 
       return this.data;
     },
@@ -239,12 +228,11 @@ export default {
       const page = (this.pagination && this.pagination.currentPage) || 1;
 
       const response = await this.data({
-        filter: this.filter,
         sort: this.sort,
         page: page,
       });
 
-      this.pagination = response.pagination;
+      this.count = response.count;
 
       return response.data;
     },
@@ -273,7 +261,7 @@ export default {
     },
 
     saveState() {
-      expiringStorage.set(this.storageKey, pick(this.$data, ['filter', 'sort']), this.cacheLifetime);
+      expiringStorage.set(this.storageKey, pick(this.$data, ['sort']), this.cacheLifetime);
     },
 
     restoreState() {
@@ -284,7 +272,6 @@ export default {
       }
 
       this.sort = previousState.sort;
-      this.filter = previousState.filter;
 
       this.saveState();
     },
