@@ -3,15 +3,15 @@
     <div class="table-component__table-wrapper">
       <table :class="fullTableClass">
           <thead :class="fullTableHeadClass">
-          <tr>
-            <table-column-header
-              @click="changeSorting"
-              v-for="column in columns"
-              :key="column.show"
-              :sort="sort"
-              :column="column"
-            ></table-column-header>
-          </tr>
+            <tr>
+              <table-column-header
+                @click="changeSorting"
+                v-for="column in columns"
+                :key="column.show"
+                :sort="sort"
+                :column="column"
+              ></table-column-header>
+            </tr>
           </thead>
           <tbody :class="fullTableBodyClass">
           <table-row
