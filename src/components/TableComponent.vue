@@ -185,7 +185,7 @@ export default {
         return this.rows;
       }
 
-      return this.rows.sort(sortColumn.getSortPredicate(this.sort.order, this.columns));
+      return this.cloneArray(this.rows).sort(sortColumn.getSortPredicate(this.sort.order, this.columns));
     },
 
     storageKey() {
@@ -197,6 +197,10 @@ export default {
   },
 
   methods: {
+    cloneArray(arrayToCopy) {
+      return arrayToCopy.slice(0);
+    },
+
     async pageChange(page) {
       this.pagination.currentPage = page;
 
@@ -206,13 +210,8 @@ export default {
     async mapDataToRows() {
       const data = this.usesLocalData ? this.prepareLocalData() : await this.fetchServerData();
 
-      let rowId = 0;
-
       this.rows = data
-        .map((rowData) => {
-          rowData.vueTableComponentInternalRowId = rowId++;
-          return rowData;
-        })
+        .map((rowData, rowIndex) => ({ ...rowData, vueTableComponentInternalRowId: rowIndex }))
         .map((rowData) => new Row(rowData, this.columns));
     },
 
